@@ -8,8 +8,8 @@ import { authenticate, AuthRequest } from '../middleware/auth.middleware';
 const router = Router();
 
 const generateTokens = (userId: string) => {
-  const accessToken = jwt.sign({ id: userId }, config.jwtSecret, { expiresIn: config.jwtExpiresIn });
-  const refreshToken = jwt.sign({ id: userId }, config.jwtRefreshSecret, { expiresIn: config.jwtRefreshExpiresIn });
+  const accessToken = jwt.sign({ id: userId }, config.jwtSecret as string, { expiresIn: config.jwtExpiresIn as any });
+  const refreshToken = jwt.sign({ id: userId }, config.jwtRefreshSecret as string, { expiresIn: config.jwtRefreshExpiresIn as any });
   
   // Example for expiresAt for client
   const expiresAt = Date.now() + 15 * 60 * 1000; // 15 mins for standard access token
@@ -113,7 +113,7 @@ router.post('/refresh', async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const decoded = jwt.verify(refreshToken, config.jwtRefreshSecret) as { id: string };
+    const decoded = jwt.verify(refreshToken, config.jwtRefreshSecret as string) as unknown as { id: string };
     const tokens = generateTokens(decoded.id);
 
     res.json({

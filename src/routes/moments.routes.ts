@@ -1,7 +1,7 @@
-import { Router, Request, Response } from 'express';
+import { Router, Response } from 'express';
+import mongoose from 'mongoose';
 import { MomentModel } from '../models/Moment';
 import { CommentModel } from '../models/Comment';
-import { User } from '../models/User';
 import { authenticate, AuthRequest } from '../middleware/auth.middleware';
 import { broadcastEvent } from '../socket';
 
@@ -168,7 +168,7 @@ router.post('/:id/comments', authenticate, async (req: AuthRequest, res: Respons
     }
 
     await CommentModel.create({
-      momentId,
+      momentId: new mongoose.Types.ObjectId(momentId as string),
       authorId: userId,
       text,
     });
